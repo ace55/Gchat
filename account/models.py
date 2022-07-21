@@ -3,8 +3,11 @@ from email.policy import default
 from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+import os
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
-
+from friend.models import FriendList
 '''
 Overwriting the built in user creation
 
@@ -76,3 +79,7 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+@receiver(post_save, sender=Account)
+def user_save(sender, instance, **kwargs):
+    FriendList.objects.get_or_create(user=instance)

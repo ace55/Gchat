@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'personal',
     'account',
     'friend',
+    'chat',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -86,6 +88,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'guacochat.wsgi.application'
+ASGI_APPLICATION = "guacochat.routing.application"
 
 
 # Database
@@ -110,8 +113,8 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             "hosts":[('127.0.0.1', 6379)],
-        }
-    }
+        },
+    },
 }
 
 # Password validation
@@ -138,11 +141,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EST'
 
-USE_I18N = True
-
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
