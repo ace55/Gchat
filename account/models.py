@@ -1,11 +1,14 @@
+from datetime import timedelta
 import email
 from email.policy import default
 from unittest.util import _MAX_LENGTH
+import django
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import os
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db.models.functions import Now
 
 from friend.models import FriendList
 '''
@@ -83,3 +86,4 @@ class Account(AbstractBaseUser):
 @receiver(post_save, sender=Account)
 def user_save(sender, instance, **kwargs):
     FriendList.objects.get_or_create(user=instance)
+

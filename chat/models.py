@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.utils import timezone
+from psycopg2 import Timestamp
 
 class PrivateChatRoom(models.Model):
     """
@@ -19,8 +20,6 @@ class PrivateChatRoom(models.Model):
 
     is_active 			= models.BooleanField(default=True)
 
-    def __str__(self):
-        return f"A chat between {user1} and {user2}."
 
     def connect_user(self, user):
         """
@@ -46,7 +45,7 @@ class PrivateChatRoom(models.Model):
     @property
     def group_name(self):
         """
-        Returns the Channels Group name that sockets should subscribe to to get sent
+        Returns the Channels Group name that sockets should subscribe to get sent
         messages as they are generated.
         """
         return f"PrivateChatRoom-{self.id}"
@@ -67,6 +66,7 @@ class RoomChatMessage(models.Model):
 	content             = models.TextField(unique=False, blank=False,)
 
 	objects = RoomChatMessageManager()
+
 
 	def __str__(self):
 		return self.content

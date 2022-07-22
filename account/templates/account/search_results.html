@@ -59,7 +59,7 @@
 				<div class="card-center px-2">
 					<h4 class="card-title">{{account.0.username}}</h4>
 					{% if account.1 %}
-					<!-- <p class="card-text"><a href="#" onclick="createOrReturnPrivateChat('{{account.0.id}}')">Send a Message</a></p> -->
+					<p class="card-text"><a href="#" onclick="createOrReturnPrivateChat('{{account.0.id}}')">Send a Message</a></p>
 					{% endif %}
 					
 				</div>
@@ -111,8 +111,38 @@
 	</div>
 	
 </div>
+<script type="text/javascript">
+	
+	function createOrReturnPrivateChat(id){
+		payload = {
+			"csrfmiddlewaretoken": "{{ csrf_token }}",
+			"user2_id": id,
+		}
+		$.ajax({
+			type: 'POST',
+			dataType: "json",
+			url: "{% url 'chat:create-or-return-private-chat' %}", // production
+			data: payload,
+			timeout: 5000,
+			success: function(data) {
+				console.log("SUCCESS", data)
+				if(data['response'] == "Successfully got the chat."){
+					chatroomId = data['chatroom_id']
+					OnGetOrCreateChatroomSuccess(chatroomId)
+				}
+				else if(data['response'] != null){
+					alert(data['response'])
+				}
+			},
+			error: function(data) {
+				console.error("ERROR...", data)
+				alert("Something went wrong.")
+			},
+		});
+	}
+</script>
 
-
+{%  include 'snippets/create_or_return_private_chat.html' %}
 
 
 {% endblock content %}
