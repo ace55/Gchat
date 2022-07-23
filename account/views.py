@@ -17,10 +17,6 @@ from friend.friend_request_status import FriendRequestStatus
 from friend.models import FriendList, FriendRequest
 
 
-
-
-
-
 def register_view(request, *args, **kwargs):
 	user = request.user
 	if user.is_authenticated: 
@@ -46,9 +42,11 @@ def register_view(request, *args, **kwargs):
 		context['registration_form'] = form
 	return render(request, 'account/register.html', context)
 
+
 def logout_view(request):
 	logout(request)
 	return redirect("home")
+
 
 def get_redirect_if_exists(request):
 	redirect = None
@@ -60,14 +58,11 @@ def get_redirect_if_exists(request):
 
 def login_view(request, *args, **kwargs):
 	context = {}
-
 	user = request.user
 	if user.is_authenticated: 
 		return redirect("home")
-
 	destination = get_redirect_if_exists(request)
 	print("destination: " + str(destination))
-
 	if request.POST:
 		form = AccountAuthenticationForm(request.POST)
 		if form.is_valid():
@@ -79,12 +74,9 @@ def login_view(request, *args, **kwargs):
 				if destination:
 					return redirect(destination)
 				return redirect("home")
-
 	else:
 		form = AccountAuthenticationForm()
-
 	context['login_form'] = form
-
 	return render(request, "account/login.html", context)
 
 
@@ -110,7 +102,6 @@ def account_view(request, *args, **kwargs):
 		context['email'] = account.email
 		context['profile_image'] = account.profile_image.url
 		context['hide_email'] = account.hide_email
-
 		try:
 			friend_list = FriendList.objects.get(user=account)
 		except FriendList.DoesNotExist:
@@ -118,7 +109,6 @@ def account_view(request, *args, **kwargs):
 			friend_list.save()
 		friends = friend_list.friends.all()
 		context['friends'] = friends
-	
 		# Define template variables
 		is_self = True
 		is_friend = False
@@ -142,7 +132,6 @@ def account_view(request, *args, **kwargs):
 				# CASE3: No request sent from YOU or THEM: FriendRequestStatus.NO_REQUEST_SENT
 				else:
 					request_sent = FriendRequestStatus.NO_REQUEST_SENT.value
-		
 		elif not user.is_authenticated:
 			is_self = False
 		else:
@@ -150,7 +139,6 @@ def account_view(request, *args, **kwargs):
 				friend_requests = FriendRequest.objects.filter(receiver=user, is_active=True)
 			except Exception as e:
 				raise e
-			
 		# Set the template variables to the values
 		context['is_self'] = is_self
 		context['is_friend'] = is_friend
@@ -179,7 +167,6 @@ def account_search_view(request, *args, **kwargs):
 				for account in search_results:
 					accounts.append((account, False))
 				context['accounts'] = accounts
-				
 	return render(request, "account/search_results.html", context)
 
 

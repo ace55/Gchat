@@ -17,9 +17,7 @@ class PrivateChatRoom(models.Model):
 
 	# Users who are currently connected to the socket (Used to keep track of unread messages)
     connected_users     = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="connected_users")
-
     is_active 			= models.BooleanField(default=True)
-
 
     def connect_user(self, user):
         """
